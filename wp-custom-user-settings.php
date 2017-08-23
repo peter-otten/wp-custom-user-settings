@@ -28,13 +28,14 @@ class WPCustomUserSettings
         wp_enqueue_script('jquery');
         wp_enqueue_script('jquery-ui-core');
 
-        $this->includeCustomAssets();
-        $this->registerPluginSettings();
-
         include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUS_menu_order.php');
         $this->WPCUSMenuOrder = new Classes\WPCUSMenuOrder();
 
+        $this->includeCustomAssets();
+        $this->registerPluginSettings();
+
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
+        add_action('admin_menu', [$this, 'optionsPage']);
         add_action('admin_menu', [$this, 'optionsPage']);
     }
 
@@ -54,10 +55,10 @@ class WPCustomUserSettings
      */
     public function registerPluginSettings()
     {
-        foreach ($this->getOptionNames() as $optionName) {
+        foreach ($this->getSettingNames() as $pageName => $settingName) {
             register_setting(
-                'WPCustomUserSettings-menu-order-settings-group',
-                $optionName
+                $pageName, //group - page
+                $settingName //name
             );
         }
     }
@@ -65,12 +66,17 @@ class WPCustomUserSettings
     /**
      * @return array
      */
-    private function getOptionNames()
+    private function getSettingNames()
     {
-        return [
-            'WPCustomUserSettings_menu_order',
-            'WPCustomUserSettings_hidden_items',
-        ];
+        $optionNames = [];
+        if ($this->WPCUSMenuOrder !== null) {
+            $pageName = $this->WPCUSMenuOrder->getPageName();
+            $settingsNames = $this->WPCUSMenuOrder->getSettingsNames();
+            foreach ($settingsNames as $settingsName) {
+                $optionNames[$pageName] = $settingsName;
+            }
+        }
+        return $optionNames;
     }
 
     /**
@@ -83,11 +89,19 @@ class WPCustomUserSettings
             'WP Custom user settings', //page title
             'WP Custom user settings', //menu title
             'manage_options', //capability
-            WPMENUCUSTOMIZER_PLUGIN_PATH . '/templates/wp_custom_user_settings_admin.php',
-            null,
-            'dashicons-editor-ul',
-            100
+            'wpcu-settings-page', //menu slug
+            [$this, 'wpcuSettingsPage'], //callable function
+            'dashicons-editor-ul', // icon
+            100 // position
         );
+    }
+
+    /**
+     *
+     */
+    public function wpcuSettingsPage()
+    {
+        include_once(plugin_dir_path(__FILE__) . '/templates/WPCUS_admin_page.php');
     }
 
     /**
