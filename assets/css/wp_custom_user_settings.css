@@ -22,3 +22,23 @@
     position: relative;
     display: block;
 }
+
+#wpcus_user_permissions .user-roles-container {
+
+}
+
+#wpcus_user_permissions .user-roles-container .user-roles-title{
+    border: 1px solid rgb(183, 183, 183);
+    background: #fff;
+    padding: 10px;
+    margin: 15px 0 -1px;
+    cursor: pointer;
+}
+
+#wpcus_user_permissions .user-roles-container .user-roles-body{
+    column-count: 3;
+    border: 1px solid rgb(183, 183, 183);
+    background: #fff;
+    padding: 10px;
+    display: none;
+}

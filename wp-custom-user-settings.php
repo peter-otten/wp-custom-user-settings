@@ -18,7 +18,10 @@ define('WPMENUCUSTOMIZER_PLUGIN_PATH', plugin_dir_path(__FILE__));
 class WPCustomUserSettings
 {
 
+    /** @var Classes\WPCUSMenuOrder */
     private $WPCUSMenuOrder;
+    /** @var Classes\WPCUSUserPermission */
+    private $WPCUSUserPermission;
 
     /**
      * WPCustomUserSettings constructor.
@@ -28,11 +31,15 @@ class WPCustomUserSettings
         wp_enqueue_script('jquery');
         wp_enqueue_script('jquery-ui-core');
 
+        /** Menu order */
         include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUS_menu_order.php');
         $this->WPCUSMenuOrder = new Classes\WPCUSMenuOrder();
 
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUS_user_permission.php');
+        $this->WPCUSUserPermission = new Classes\WPCUSUserPermission();
+
         $this->includeCustomAssets();
-        $this->registerPluginSettings();
+        $this->getSettingNames();
 
         register_deactivation_hook(__FILE__, [$this, 'deactivate']);
         add_action('admin_menu', [$this, 'optionsPage']);
@@ -44,23 +51,21 @@ class WPCustomUserSettings
      */
     public function deactivate()
     {
-        $optionName = $this->getOptionNames();
-        foreach ($optionName as $value) {
-            delete_option($value);
-        }
+
     }
 
     /**
-     * Register settings
+     * @param $pageName
+     * @param $settingName
+     * @param string $callback
      */
-    public function registerPluginSettings()
+    public function registerPluginSettings($pageName, $settingName, $callback = '')
     {
-        foreach ($this->getSettingNames() as $pageName => $settingName) {
-            register_setting(
-                $pageName, //group - page
-                $settingName //name
-            );
-        }
+        register_setting(
+            $pageName, //group - page
+            $settingName, //name
+            $callback
+        );
     }
 
     /**
@@ -69,11 +74,22 @@ class WPCustomUserSettings
     private function getSettingNames()
     {
         $optionNames = [];
+
+        /** Menu order settings */
         if ($this->WPCUSMenuOrder !== null) {
             $pageName = $this->WPCUSMenuOrder->getPageName();
             $settingsNames = $this->WPCUSMenuOrder->getSettingsNames();
             foreach ($settingsNames as $settingsName) {
-                $optionNames[$pageName] = $settingsName;
+                $this->registerPluginSettings($pageName, $settingsName);
+            }
+        }
+
+        if ($this->WPCUSUserPermission !== null) {
+            $pageName = $this->WPCUSUserPermission->getPageName();
+            $settingsNames = $this->WPCUSUserPermission->getSettingsNames();
+            $callBack = $this->WPCUSUserPermission->getCallBack();
+            foreach ($settingsNames as $key => $settingsName) {
+                $this->registerPluginSettings($pageName, $settingsName, $callBack[$key]);
             }
         }
         return $optionNames;
@@ -139,6 +155,14 @@ class WPCustomUserSettings
     public function getWPCUSMenuOrder(): Classes\WPCUSMenuOrder
     {
         return $this->WPCUSMenuOrder;
+    }
+
+    /**
+     * @return Classes\WPCUSUserPermission
+     */
+    public function getWPCUSUserPermission(): Classes\WPCUSUserPermission
+    {
+        return $this->WPCUSUserPermission;
     }
 }
 
