@@ -22,6 +22,8 @@ class WPCustomUserSettings
     private $WPCUSMenuOrder;
     /** @var Classes\WPCUSUserPermission */
     private $WPCUSUserPermission;
+    /** @var Classes\WPCUSMenuItems */
+    private $WPCUSMenuItems;
 
     /**
      * WPCustomUserSettings constructor.
@@ -32,11 +34,14 @@ class WPCustomUserSettings
         wp_enqueue_script('jquery-ui-core');
 
         /** Menu order */
-        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUS_menu_order.php');
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUSMenuOrder.php');
         $this->WPCUSMenuOrder = new Classes\WPCUSMenuOrder();
 
-        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUS_user_permission.php');
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUSUserPermission.php');
         $this->WPCUSUserPermission = new Classes\WPCUSUserPermission();
+
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUSMenuItems.php');
+        $this->WPCUSMenuItems = new Classes\WPCUSMenuItems();
 
         $this->includeCustomAssets();
         $this->getSettingNames();
@@ -88,6 +93,15 @@ class WPCustomUserSettings
             $pageName = $this->WPCUSUserPermission->getPageName();
             $settingsNames = $this->WPCUSUserPermission->getSettingsNames();
             $callBack = $this->WPCUSUserPermission->getCallBack();
+            foreach ($settingsNames as $key => $settingsName) {
+                $this->registerPluginSettings($pageName, $settingsName, $callBack[$key]);
+            }
+        }
+
+        if ($this->WPCUSMenuItems !== null) {
+            $pageName = $this->WPCUSMenuItems->getPageName();
+            $settingsNames = $this->WPCUSMenuItems->getSettingsNames();
+            $callBack = $this->WPCUSMenuItems->getCallBack();
             foreach ($settingsNames as $key => $settingsName) {
                 $this->registerPluginSettings($pageName, $settingsName, $callBack[$key]);
             }
@@ -163,6 +177,14 @@ class WPCustomUserSettings
     public function getWPCUSUserPermission(): Classes\WPCUSUserPermission
     {
         return $this->WPCUSUserPermission;
+    }
+
+    /**
+     * @return Classes\WPCUSMenuItems
+     */
+    public function getWPCUSMenuItems(): Classes\WPCUSMenuItems
+    {
+        return $this->WPCUSMenuItems;
     }
 }
 

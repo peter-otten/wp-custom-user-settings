@@ -9,4 +9,10 @@ jQuery(document).ready(function(){
 
         jQuery(".user-roles-body[data-key='"+key+"']").toggle();
     });
+
+    jQuery("#wpcus_menu_items .menu-items-title").click(function() {
+        var key = jQuery(this).data('key');
+
+        jQuery(".menu-items-body[data-key='"+key+"']").toggle();
+    });
 });

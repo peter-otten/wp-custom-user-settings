@@ -27,7 +27,8 @@
 
 }
 
-#wpcus_user_permissions .user-roles-container .user-roles-title{
+#wpcus_user_permissions .user-roles-container .user-roles-title,
+#wpcus_menu_items .menu-items-container .menu-items-title{
     border: 1px solid rgb(183, 183, 183);
     background: #fff;
     padding: 10px;
@@ -35,10 +36,15 @@
     cursor: pointer;
 }
 
-#wpcus_user_permissions .user-roles-container .user-roles-body{
+#wpcus_user_permissions .user-roles-container .user-roles-body,
+#wpcus_menu_items .menu-items-container .menu-items-body{
     column-count: 3;
     border: 1px solid rgb(183, 183, 183);
     background: #fff;
     padding: 10px;
     display: none;
+}
+
+#wpcus_menu_items .menu-items-container .menu-items-body .menu-items-sub-list {
+    margin-left: 25px;
 }
