@@ -18,6 +18,7 @@ class WPCUSMenuItems
     public function __construct()
     {
         add_action('admin_init', [$this, 'wpcusMenuItems']);
+        add_action('admin_init', [$this, 'wpcusHideMenuItems']);
 
         $this->pageName = 'WPCUS_menu_items';
         $this->settingsNames = [
@@ -108,9 +109,69 @@ class WPCUSMenuItems
         return $this->callBack;
     }
 
+    /**
+     * @return array
+     */
     public function getHiddenMenuItems(): array
     {
         $hiddenMenuItems = get_option($this->settingsNames[0]);
         return $hiddenMenuItems;
     }
+
+    public function wpcusHideMenuItems()
+    {
+        $hiddenMenuItems = $this->getHiddenMenuItems();
+        $currentUser = wp_get_current_user();
+
+        global $menu;
+        global $submenu;
+
+
+        foreach ($currentUser->roles as $userRole) {
+            if (array_key_exists($userRole, $hiddenMenuItems)) {
+                foreach ($hiddenMenuItems[$userRole] as $menuParentSlug) {
+                    if (!is_array($menuParentSlug)) {
+                        $menuItem = $this->in_array_r($menuParentSlug, $menu);
+                        if ($menuItem) {
+                            $arrayKey = array_search($menuItem, $menu);
+                            if (array_key_exists($arrayKey, $menu)) {
+                                unset($menu[$arrayKey]);
+                            }
+                        }
+                    }
+
+                    if (is_array($menuParentSlug)) {
+                        foreach ($submenu as $subMenuParent => $submenuItems) {
+                            foreach ($submenuItems as $submenuItemKey => $submenuItem) {
+                                foreach ($menuParentSlug as $hiddenSubMenuItem) {
+                                    if ($hiddenSubMenuItem == $submenuItem[2]) {
+                                        unset($submenu[$subMenuParent][$submenuItemKey]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //exit();
+    }
+
+    /**
+     * @param $needle
+     * @param $haystack
+     * @param bool $strict
+     * @return mixed
+     */
+    private function in_array_r($needle, $haystack, $strict = false) {
+        foreach ($haystack as $item) {
+            if (($strict ? $item === $needle : $item == $needle) ||
+                (is_array($item) && $this->in_array_r($needle, $item, $strict))) {
+                return $item;
+            }
+        }
+        return false;
+    }
+
 }

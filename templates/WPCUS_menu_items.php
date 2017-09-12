@@ -34,7 +34,7 @@ foreach ($allRoles as $key => $currentRole) {
                             $checked = false;
                             if (array_key_exists($currentRole->name, $hiddenMenuItems) == true &&
                                 array_key_exists($menuItem[2], $hiddenMenuItems[$currentRole->name]) == true &&
-                                $hiddenMenuItems[$currentRole->name][$menuItem[2]][$subNumber] == $submenuItem[2]
+                                in_array($submenuItem[2], $hiddenMenuItems[$currentRole->name][$menuItem[2]])
                             ) {
                                 $checked = 'checked="checked"';
                             }
