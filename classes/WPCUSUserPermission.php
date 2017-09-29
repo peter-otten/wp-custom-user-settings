@@ -1,9 +1,9 @@
 <?php
-namespace WPCUS\WPCustomUserSettings\Classes;
+namespace WPCUS\WPCustomUserSettings\classes;
 
 /**
  * Class WPCUSUserPermission
- * @package WPCUS\WPCustomUserSettings\Classes
+ * @package WPCUS\WPCustomUserSettings\classes
  */
 class WPCUSUserPermission
 {

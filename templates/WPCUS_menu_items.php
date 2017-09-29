@@ -1,6 +1,4 @@
 <?php
-global $menu;
-global $submenu;
 foreach ($allRoles as $key => $currentRole) {
     ?>
     <div id="wpcus_menu_items">

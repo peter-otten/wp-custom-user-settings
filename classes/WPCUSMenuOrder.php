@@ -1,9 +1,9 @@
 <?php
-namespace WPCUS\WPCustomUserSettings\Classes;
+namespace WPCUS\WPCustomUserSettings\classes;
 
 /**
  * Class WPCUSMenuOrder
- * @package WPCUS\Classes
+ * @package WPCUS\classes
  */
 class WPCUSMenuOrder
 {

@@ -34,14 +34,14 @@ class WPCustomUserSettings
         wp_enqueue_script('jquery-ui-core');
 
         /** Menu order */
-        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUSMenuOrder.php');
-        $this->WPCUSMenuOrder = new Classes\WPCUSMenuOrder();
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/classes/WPCUSMenuOrder.php');
+        $this->WPCUSMenuOrder = new classes\WPCUSMenuOrder();
 
-        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUSUserPermission.php');
-        $this->WPCUSUserPermission = new Classes\WPCUSUserPermission();
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/classes/WPCUSUserPermission.php');
+        $this->WPCUSUserPermission = new classes\WPCUSUserPermission();
 
-        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/Classes/WPCUSMenuItems.php');
-        $this->WPCUSMenuItems = new Classes\WPCUSMenuItems();
+        include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/classes/WPCUSMenuItems.php');
+        $this->WPCUSMenuItems = new classes\WPCUSMenuItems();
 
         $this->includeCustomAssets();
         $this->getSettingNames();
@@ -51,13 +51,6 @@ class WPCustomUserSettings
         add_action('admin_menu', [$this, 'optionsPage']);
     }
 
-    /**
-     * Deactivation hook
-     */
-    public function deactivate()
-    {
-
-    }
 
     /**
      * @param $pageName
@@ -78,8 +71,6 @@ class WPCustomUserSettings
      */
     private function getSettingNames()
     {
-        $optionNames = [];
-
         /** Menu order settings */
         if ($this->WPCUSMenuOrder !== null) {
             $pageName = $this->WPCUSMenuOrder->getPageName();
@@ -106,7 +97,6 @@ class WPCustomUserSettings
                 $this->registerPluginSettings($pageName, $settingsName, $callBack[$key]);
             }
         }
-        return $optionNames;
     }
 
     /**
@@ -170,7 +160,6 @@ class WPCustomUserSettings
     {
         return $this->WPCUSMenuOrder;
     }
-
     /**
      * @return Classes\WPCUSUserPermission
      */
@@ -178,7 +167,6 @@ class WPCustomUserSettings
     {
         return $this->WPCUSUserPermission;
     }
-
     /**
      * @return Classes\WPCUSMenuItems
      */

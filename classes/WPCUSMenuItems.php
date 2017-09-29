@@ -1,9 +1,9 @@
 <?php
-namespace WPCUS\WPCustomUserSettings\Classes;
+namespace WPCUS\WPCustomUserSettings\classes;
 
 /**
  * Class WPCUS_menu_items
- * @package WPCUS\WPCustomUserSettings\Classes
+ * @package WPCUS\WPCustomUserSettings\classes
  */
 class WPCUSMenuItems
 {
@@ -11,6 +11,8 @@ class WPCUSMenuItems
     private $pageName;
     private $settingsNames;
     private $callBack;
+    private $allMenuItems;
+    private $allSubMenuItems;
 
     /**
      * WPCUS_menu_order constructor.
@@ -68,6 +70,8 @@ class WPCUSMenuItems
     {
         $allRoles = $this->getAllUserRoles();
         $hiddenMenuItems = $this->getHiddenMenuItems();
+        $menu = $this->getAllMenuItems();
+        $submenu = $this->getAllSubMenuItems();
         include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/templates/WPCUS_menu_items.php');
     }
 
@@ -86,6 +90,7 @@ class WPCUSMenuItems
     }
 
     /**
+     * Returns the page names
      * @return string
      */
     public function getPageName(): string
@@ -94,14 +99,16 @@ class WPCUSMenuItems
     }
 
     /**
+     * Returns the settings names
      * @return array
      */
-    public function getSettingsNames()
+    public function getSettingsNames() : array
     {
         return $this->settingsNames;
     }
 
     /**
+     * Returns the callbacks for the options
      * @return array
      */
     public function getCallBack(): array
@@ -110,6 +117,7 @@ class WPCUSMenuItems
     }
 
     /**
+     * Get the first option, the hidden menu items
      * @return array
      */
     public function getHiddenMenuItems(): array
@@ -118,6 +126,9 @@ class WPCUSMenuItems
         return $hiddenMenuItems;
     }
 
+    /**
+     * Unsets the menu and submenu items
+     */
     public function wpcusHideMenuItems()
     {
         $hiddenMenuItems = $this->getHiddenMenuItems();
@@ -125,7 +136,10 @@ class WPCUSMenuItems
 
         global $menu;
         global $submenu;
-
+        //fixme: got to set local menu items, else items are unset and do not show in the front end of the panel
+        //todo: save all menu items with the setting shown or not show. now the current hidden items are only saved
+        $this->allMenuItems = $menu;
+        $this->allSubMenuItems = $submenu;
 
         foreach ($currentUser->roles as $userRole) {
             if (array_key_exists($userRole, $hiddenMenuItems)) {
@@ -173,5 +187,22 @@ class WPCUSMenuItems
         }
         return false;
     }
+
+    /**
+     * @return array
+     */
+    public function getAllMenuItems(): array
+    {
+        return $this->allMenuItems;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllSubMenuItems(): array
+    {
+        return $this->allSubMenuItems;
+    }
+
 
 }
