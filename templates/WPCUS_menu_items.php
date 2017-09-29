@@ -1,5 +1,5 @@
 <?php
-foreach ($allRoles as $key => $currentRole) {
+foreach ($this->getAllUserRoles() as $key => $currentRole) {
     ?>
     <div id="wpcus_menu_items">
         <div class="menu-items-container">
@@ -8,15 +8,15 @@ foreach ($allRoles as $key => $currentRole) {
             </h3>
             <div class="menu-items-body" data-key="<?= $key ?>">
                 <ul>
-                    <?php foreach ($menu as $number => $menuItem) :
+                    <?php foreach ($this->getAllMenuItems() as $number => $menuItem) :
                         if (empty($menuItem[0])) {
                             $menuName = $menuItem[2];
                         } else {
                             $menuName = $menuItem[0];
                         }
                         $checked = false;
-                        if (array_key_exists($currentRole->name, $hiddenMenuItems) == true &&
-                            $hiddenMenuItems[$currentRole->name][$number] == $menuItem[2]) {
+                        if (array_key_exists($currentRole->name, $this->getHiddenMenuItems()) == true &&
+                            $this->getHiddenMenuItems()[$currentRole->name][$number] == $menuItem[2]) {
                             $checked = 'checked="checked"';
                         };
                         $subNumber = 0;
@@ -28,11 +28,11 @@ foreach ($allRoles as $key => $currentRole) {
                             </p>
                         </li>
                         <ul class="menu-items-sub-list">
-                        <?php foreach ($submenu[$menuItem[2]] as $submenuItem) :
+                        <?php foreach ($this->getAllSubMenuItems()[$menuItem[2]] as $submenuItem) :
                             $checked = false;
-                            if (array_key_exists($currentRole->name, $hiddenMenuItems) == true &&
-                                array_key_exists($menuItem[2], $hiddenMenuItems[$currentRole->name]) == true &&
-                                in_array($submenuItem[2], $hiddenMenuItems[$currentRole->name][$menuItem[2]])
+                            if (array_key_exists($currentRole->name, $this->getHiddenMenuItems()) == true &&
+                                array_key_exists($menuItem[2], $this->getHiddenMenuItems()[$currentRole->name]) == true &&
+                                in_array($submenuItem[2], $this->getHiddenMenuItems()[$currentRole->name][$menuItem[2]])
                             ) {
                                 $checked = 'checked="checked"';
                             }

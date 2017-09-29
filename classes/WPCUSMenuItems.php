@@ -68,10 +68,6 @@ class WPCUSMenuItems
      */
     public function wpcusMenuItemsCallback()
     {
-        $allRoles = $this->getAllUserRoles();
-        $hiddenMenuItems = $this->getHiddenMenuItems();
-        $menu = $this->getAllMenuItems();
-        $submenu = $this->getAllSubMenuItems();
         include_once(WPMENUCUSTOMIZER_PLUGIN_PATH . '/templates/WPCUS_menu_items.php');
     }
 
@@ -120,7 +116,7 @@ class WPCUSMenuItems
      * Get the first option, the hidden menu items
      * @return array
      */
-    public function getHiddenMenuItems(): array
+    private function getHiddenMenuItems(): array
     {
         $hiddenMenuItems = get_option($this->settingsNames[0]);
         return $hiddenMenuItems;
@@ -191,7 +187,7 @@ class WPCUSMenuItems
     /**
      * @return array
      */
-    public function getAllMenuItems(): array
+    private function getAllMenuItems(): array
     {
         return $this->allMenuItems;
     }
@@ -199,7 +195,7 @@ class WPCUSMenuItems
     /**
      * @return array
      */
-    public function getAllSubMenuItems(): array
+    private function getAllSubMenuItems(): array
     {
         return $this->allSubMenuItems;
     }
